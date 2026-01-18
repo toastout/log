@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💬 로그 생성기</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-color: #f3f4f6;
+        --panel-bg: #ffffff;
+        --input-bg: #f9fafb;
+        --border: #e5e7eb;
+        --text-main: #1f2937;
+        --text-sub: #6b7280;
+        --accent: #3b82f6;
+        --shadow: rgba(0, 0, 0, 0.05);
+        --toast-color: #d97706; /* 빵 색상 포인트 */
+      }
+
+      body {
+        font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        color: var(--text-main);
+        overflow: hidden;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+          overflow: auto;
+          height: auto;
+        }
+        .editor-panel {
+          width: 100% !important;
+          height: auto;
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .preview-panel {
+          height: 100vh;
+        }
+      }
+
+      /* Editor Panel */
+      .editor-panel {
+        width: 420px;
+        background-color: var(--panel-bg);
+        padding: 25px;
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        flex-shrink: 0;
+        gap: 15px;
+        box-shadow: 4px 0 15px var(--shadow);
+        z-index: 10;
+      }
+
+      /* ✨ 헤더 영역 (토스트 스타일 반영) */
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* 🍞 빵 버튼 스타일 */
+      .btn-bread {
+        background-color: #fff7ed;
+        border: 1px solid #ffedd5;
+        color: var(--text-main);
+        font-size: 1.2rem;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-bread:hover {
+        background-color: #ffedd5;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(217, 119, 6, 0.1);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: var(--text-main);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      label {
+        font-size: 0.85rem;
+        color: var(--text-sub);
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+
+      select,
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+      }
+      textarea {
+        resize: none;
+        line-height: 1.6;
+        font-family: "Pretendard", sans-serif;
+        height: 300px;
+        color: #374151;
+      }
+      textarea::placeholder {
+        color: #9ca3af;
+        font-style: italic;
+      }
+
+      textarea:focus,
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      /* Keyword Group */
+      .keyword-group {
+        background: #f8fafc;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      .keyword-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 8px;
+        align-items: center;
+      }
+      .keyword-row input {
+        padding: 8px;
+        font-size: 0.9rem;
+        background: #fff;
+      }
+
+      .btn-small {
+        padding: 8px 12px;
+        background: #94a3b8;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        transition: 0.2s;
+      }
+      .btn-small:hover {
+        background: #64748b;
+      }
+
+      .btn-add {
+        background: #fff;
+        border: 1px dashed #cbd5e1;
+        color: #64748b;
+        width: 100%;
+        margin-top: 5px;
+        transition: 0.2s;
+      }
+      .btn-add:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+      }
+      .btn-remove {
+        background: #ef4444;
+        color: white;
+      }
+
+      .helper-bar {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 5px;
+      }
+      .helper-bar button {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #2563eb;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 700;
+        transition: 0.2s;
+      }
+      .helper-bar button:hover {
+        background: #dbeafe;
+        transform: translateY(-1px);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 20px;
+      }
+      .btn-main {
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1rem;
+        flex: 1;
+        transition: 0.2s;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .btn-save {
+        background-color: var(--accent);
+      }
+      .btn-save:hover {
+        background-color: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
+      }
+
+      /* Preview Panel */
+      .preview-panel {
+        flex: 1;
+        background-color: #e5e7eb;
+        overflow-y: auto;
+        display: flex;
+        padding: 40px;
+      }
+
+      #capture-area {
+        width: 100%;
+        max-width: 420px;
+        margin: auto;
+        min-height: 600px;
+        display: flex;
+        flex-direction: column;
+        padding: 30px 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s;
+        background-color: #fff;
+      }
+
+      .chat-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .msg-row {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.1s;
+      }
+      .msg-row:active {
+        transform: scale(0.98);
+      }
+
+      .msg-row:hover::after {
+        content: "↔ Click to switch";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0.8;
+        white-space: nowrap;
+      }
+
+      .bubble {
+        padding: 12px 18px;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        word-break: break-all;
+        max-width: 90%;
+        white-space: pre-wrap;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      }
+
+      /* --- THEMES --- */
+
+      .theme-imessage #capture-area {
+        background: #ffffff;
+      }
+      .theme-imessage .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-imessage .msg-row.other .bubble {
+        background: #e5e5ea;
+        color: #000;
+        border-bottom-left-radius: 4px;
+      }
+      .theme-imessage .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-imessage .msg-row.me .bubble {
+        background: #007aff;
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+
+      .theme-telegram #capture-area {
+        background: #85a2b6;
+      }
+      .theme-telegram .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-telegram .msg-row.other .bubble {
+        background: #ffffff;
+        color: #000;
+        border-bottom-left-radius: 0;
+      }
+      .theme-telegram .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-telegram .msg-row.me .bubble {
+        background: #e3feb6;
+        color: #000;
+        border-bottom-right-radius: 0;
+      }
+
+      .theme-discord #capture-area {
+        background: #313338;
+      }
+      .theme-discord .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-discord .msg-row.other .bubble {
+        background: #2b2d31;
+        color: #dbdee1;
+        border-radius: 4px;
+      }
+      .theme-discord .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-discord .msg-row.me .bubble {
+        background: #5865f2;
+        color: #fff;
+        border-radius: 4px;
+      }
+
+      .theme-line #capture-area {
+        background: #92b7ce;
+      }
+      .theme-line .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-line .msg-row.other .bubble {
+        background: #ffffff;
+        color: #000;
+        border-top-left-radius: 0;
+      }
+      .theme-line .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-line .msg-row.me .bubble {
+        background: #86ea65;
+        color: #000;
+        border-top-right-radius: 0;
+      }
+    </style>
+  </head>
+  <body class="theme-imessage">
+    <div class="editor-panel">
+      <div class="header-row">
+        <div class="title-group">
+          <button class="btn-bread" onclick="goHome()" title="홈으로 돌아가기">
+            🍞️
+          </button>
+          <h2>💬 로그 생성기 V7</h2>
+        </div>
+        <button onclick="resetData()" class="btn-small">전체 초기화</button>
+      </div>
+
+      <label>테마 선택</label>
+      <select id="theme-select" onchange="changeTheme()">
+        <option value="theme-imessage">iMessage (Blue)</option>
+        <option value="theme-telegram">Telegram (Green)</option>
+        <option value="theme-line">LINE (Light Green)</option>
+        <option value="theme-discord">Discord (Blurple)</option>
+      </select>
+
+      <label>치환 키워드</label>
+      <div class="helper-bar">
+        <button
+          onmousedown="event.preventDefault(); insertToFocused('{{user}}')"
+        >
+          + {{user}}
+        </button>
+        <button
+          onmousedown="event.preventDefault(); insertToFocused('{{char}}')"
+        >
+          + {{char}}
+        </button>
+      </div>
+      <div class="keyword-group">
+        <div id="keyword-list"></div>
+        <button class="btn-small btn-add" onclick="addKeywordRow('', '')">
+          + 키워드 칸 추가
+        </button>
+      </div>
+
+      <label>대화 내용 (ㅏ:나 / ㅓ:상대)</label>
+      <textarea
+        id="chat-input"
+        spellcheck="false"
+        oninput="render()"
+        onfocus="handleFocus(this)"
+        placeholder="(예시 내용은 입력을 시작하면 사라집니다)&#13;&#10;&#13;&#10;ㅏ&#13;&#10;안녕하세요&#13;&#10;ㅓ&#13;&#10;반갑습니다"
+      ></textarea>
+
+      <div class="btn-group">
+        <button class="btn-main btn-save" onclick="saveImage()">
+          📸 이미지 저장
+        </button>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div id="capture-area">
+        <div class="chat-content" id="chat-list"></div>
+      </div>
+    </div>
+
+    <script>
+      const EXAMPLE_TEXT = `ㅏ
+유저는 박박 우겨서 신부 수트를 입고 아주 편안하게 앉아 있었다.
+ㅓ
+문을 열자마자 마주한 풍경은 '수줍은 신부’와는 거리가 멀어도 한참 멀었다. 풍성한 드레스 자락 대신 날 선 바지 주름이, 다소곳하게 모은 손 대신 세상 편안하게 늘어진 자세가 시야를 가득 채운다.
+
+“드레스 코드가 바뀐 줄은 몰랐군요. 하객들에게 신랑이 두 명이라고 소개할 셈입니까?”
+
+성큼 다가가 그녀의 맞은편 소파 팔걸이에 삐딱하게 걸터앉으며, 위아래로 훑어보는 시선에 노골적인 평가를 담았다.
+ㅏ
+“눈이 달려있으면 제가 남자로 보이지는 않겠죠.” 유저는 캐릭터의 눈동자를 올곧게 바라보며 피식 웃었다.
+ㅓ
+“시력은 양쪽 다 1.5니 걱정 마십시오. 다만 하객들이 신랑과 신부를 구분하는 데 1초 정도 더 걸릴 수는 있겠군요.”
+
+자리에서 일어나 재킷 단추를 잠그며 턱짓으로 문을 가리켰다.
+
+“그럼 이동하죠. 입장할 시간입니다, 파트너.”`;
+
+      const DEFAULT_KEYWORDS = [
+        { target: "유저", replace: "{{user}}" },
+        { target: "캐릭터", replace: "{{char}}" },
+      ];
+
+      let parsedBlocks = [];
+      let lastFocusedElem = null;
+
+      window.onload = function () {
+        loadData();
+        lastFocusedElem = document.getElementById("chat-input");
+      };
+
+      // ✨ 홈페이지 이동 함수
+      function goHome() {
+        window.location.href = "https://toastout.github.io/toast/";
+      }
+
+      function handleFocus(elem) {
+        setLastFocused(elem);
+        if (elem.value.trim() === EXAMPLE_TEXT.trim()) {
+          elem.value = "";
+          render();
+        }
+      }
+
+      function setLastFocused(elem) {
+        lastFocusedElem = elem;
+      }
+
+      function insertToFocused(text) {
+        if (lastFocusedElem) {
+          const start = lastFocusedElem.selectionStart;
+          const end = lastFocusedElem.selectionEnd;
+          const val = lastFocusedElem.value;
+          lastFocusedElem.value =
+            val.substring(0, start) + text + val.substring(end);
+          lastFocusedElem.selectionStart = lastFocusedElem.selectionEnd =
+            start + text.length;
+          lastFocusedElem.focus();
+          render();
+        } else {
+          alert("입력할 곳을 먼저 클릭해주세요.");
+        }
+      }
+
+      function saveData() {
+        const data = {
+          text: document.getElementById("chat-input").value,
+          theme: document.getElementById("theme-select").value,
+          keywords: getKeywordsFromUI(),
+        };
+        localStorage.setItem("novel_gen_v7", JSON.stringify(data));
+      }
+
+      function loadData() {
+        const saved = localStorage.getItem("novel_gen_v7");
+        if (saved) {
+          const data = JSON.parse(saved);
+          document.getElementById("chat-input").value =
+            data.text || EXAMPLE_TEXT;
+          document.getElementById("theme-select").value =
+            data.theme || "theme-imessage";
+
+          const savedKeywords = data.keywords || DEFAULT_KEYWORDS;
+          document.getElementById("keyword-list").innerHTML = "";
+          savedKeywords.forEach((k) => addKeywordRow(k.target, k.replace));
+        } else {
+          document.getElementById("chat-input").value = EXAMPLE_TEXT;
+          DEFAULT_KEYWORDS.forEach((k) => addKeywordRow(k.target, k.replace));
+        }
+        changeTheme();
+        render();
+      }
+
+      function resetData() {
+        if (confirm("초기화 하시겠습니까?")) {
+          localStorage.removeItem("novel_gen_v7");
+          location.reload();
+        }
+      }
+
+      function addKeywordRow(target, replace) {
+        const div = document.createElement("div");
+        div.className = "keyword-row";
+        div.innerHTML = `
+                <input type="text" placeholder="대상 (예: 유저)" value="${target}" oninput="render()" onfocus="setLastFocused(this)">
+                <span style="color:#adb5bd;">→</span>
+                <input type="text" placeholder="변경 (예: {{user}})" value="${replace}" oninput="render()" onfocus="setLastFocused(this)">
+                <button class="btn-small btn-remove" onclick="removeRow(this)">X</button>
+            `;
+        document.getElementById("keyword-list").appendChild(div);
+      }
+
+      function removeRow(btn) {
+        btn.parentElement.remove();
+        render();
+      }
+
+      function getKeywordsFromUI() {
+        const rows = document.querySelectorAll(".keyword-row");
+        const list = [];
+        rows.forEach((row) => {
+          const inputs = row.querySelectorAll("input");
+          const t = inputs[0].value.trim();
+          const r = inputs[1].value.trim();
+          if (t) list.push({ target: t, replace: r });
+        });
+        return list;
+      }
+
+      function changeTheme() {
+        const theme = document.getElementById("theme-select").value;
+        document.body.className = theme;
+        saveData();
+      }
+
+      function parseRawText(rawText) {
+        const lines = rawText.split("\n");
+        let blocks = [];
+        let currentSpeaker = "other";
+        let buffer = [];
+
+        lines.forEach((line) => {
+          const trimmed = line.trim();
+          if (trimmed === "ㅏ" || trimmed === "ㅓ") {
+            if (buffer.length > 0) {
+              blocks.push({
+                speaker: currentSpeaker,
+                content: buffer.join("\n"),
+              });
+              buffer = [];
+            }
+            currentSpeaker = trimmed === "ㅏ" ? "me" : "other";
+          } else {
+            if (buffer.length === 0 && trimmed === "") return;
+            buffer.push(line);
+          }
+        });
+        if (buffer.length > 0) {
+          blocks.push({ speaker: currentSpeaker, content: buffer.join("\n") });
+        }
+        return blocks;
+      }
+
+      function render() {
+        saveData();
+
+        const rawInput = document.getElementById("chat-input").value;
+        parsedBlocks = parseRawText(rawInput);
+
+        const chatList = document.getElementById("chat-list");
+        chatList.innerHTML = "";
+
+        const keywords = getKeywordsFromUI();
+
+        parsedBlocks.forEach((block, index) => {
+          let displayText = block.content;
+          keywords.forEach((k) => {
+            if (k.target && k.replace) {
+              displayText = displayText.replaceAll(k.target, k.replace);
+            }
+          });
+
+          displayText = displayText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+          const row = document.createElement("div");
+          const isMe = block.speaker === "me";
+          row.className = isMe ? "msg-row me" : "msg-row other";
+          row.onclick = () => toggleSpeaker(index);
+
+          row.innerHTML = `<div class="bubble">${displayText}</div>`;
+          chatList.appendChild(row);
+        });
+      }
+
+      function toggleSpeaker(index) {
+        if (!parsedBlocks[index]) return;
+
+        parsedBlocks[index].speaker =
+          parsedBlocks[index].speaker === "me" ? "other" : "me";
+
+        let newText = "";
+        parsedBlocks.forEach((block) => {
+          newText += block.speaker === "me" ? "ㅏ\n" : "ㅓ\n";
+          newText += block.content + "\n";
+        });
+
+        const textarea = document.getElementById("chat-input");
+        textarea.value = newText.trim();
+        render();
+      }
+
+      function saveImage() {
+        const captureArea = document.getElementById("capture-area");
+        window.scrollTo(0, 0);
+        const style = window.getComputedStyle(captureArea);
+
+        html2canvas(captureArea, {
+          scale: 2,
+          backgroundColor: style.backgroundColor,
+          useCORS: true,
+        }).then((canvas) => {
+          const link = document.createElement("a");
+          link.download = "novel_log_v7.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        });
+      }
+    </script>
+  </body>
+</html>
