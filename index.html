@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>💬 로그 생성기</title>
+    <title>💬 로그 생성기 V9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
       * {
@@ -19,7 +19,6 @@
         --text-sub: #6b7280;
         --accent: #3b82f6;
         --shadow: rgba(0, 0, 0, 0.05);
-        --toast-color: #d97706; /* 빵 색상 포인트 */
       }
 
       body {
@@ -64,7 +63,7 @@
         z-index: 10;
       }
 
-      /* ✨ 헤더 영역 (토스트 스타일 반영) */
+      /* Header */
       .header-row {
         display: flex;
         justify-content: space-between;
@@ -77,7 +76,6 @@
         gap: 10px;
       }
 
-      /* 🍞 빵 버튼 스타일 */
       .btn-bread {
         background-color: #fff7ed;
         border: 1px solid #ffedd5;
@@ -94,7 +92,6 @@
       .btn-bread:hover {
         background-color: #ffedd5;
         transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(217, 119, 6, 0.1);
       }
 
       h2 {
@@ -313,6 +310,28 @@
 
       /* --- THEMES --- */
 
+      /* 1. KakaoTalk (Yellow) - NEW */
+      .theme-kakao #capture-area {
+        background: #bacee0;
+      }
+      .theme-kakao .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-kakao .msg-row.other .bubble {
+        background: #ffffff;
+        color: #000;
+        border-top-left-radius: 4px;
+      }
+      .theme-kakao .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-kakao .msg-row.me .bubble {
+        background: #ffeb33;
+        color: #000;
+        border-top-right-radius: 4px;
+      }
+
+      /* 2. iMessage (Blue) */
       .theme-imessage #capture-area {
         background: #ffffff;
       }
@@ -333,6 +352,7 @@
         border-bottom-right-radius: 4px;
       }
 
+      /* 3. Telegram (Mint) */
       .theme-telegram #capture-area {
         background: #85a2b6;
       }
@@ -353,26 +373,7 @@
         border-bottom-right-radius: 0;
       }
 
-      .theme-discord #capture-area {
-        background: #313338;
-      }
-      .theme-discord .msg-row.other {
-        align-items: flex-start;
-      }
-      .theme-discord .msg-row.other .bubble {
-        background: #2b2d31;
-        color: #dbdee1;
-        border-radius: 4px;
-      }
-      .theme-discord .msg-row.me {
-        align-items: flex-end;
-      }
-      .theme-discord .msg-row.me .bubble {
-        background: #5865f2;
-        color: #fff;
-        border-radius: 4px;
-      }
-
+      /* 4. LINE (Green) */
       .theme-line #capture-area {
         background: #92b7ce;
       }
@@ -392,6 +393,154 @@
         color: #000;
         border-top-right-radius: 0;
       }
+
+      /* 5. X / Twitter (Black) - NEW */
+      .theme-x #capture-area {
+        background: #000000;
+      }
+      .theme-x .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-x .msg-row.other .bubble {
+        background: #2f3336;
+        color: #e7e9ea;
+        border-radius: 20px;
+      }
+      .theme-x .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-x .msg-row.me .bubble {
+        background: #1d9bf0;
+        color: #fff;
+        border-radius: 20px;
+      }
+
+      /* 6. Daum Cafe (Red) */
+      .theme-daum #capture-area {
+        background: #ffffff;
+      }
+      .theme-daum .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-daum .msg-row.other .bubble {
+        background: #f0f0f0;
+        color: #000;
+        border-top-left-radius: 0;
+      }
+      .theme-daum .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-daum .msg-row.me .bubble {
+        background: #d92525;
+        color: #fff;
+        border-top-right-radius: 0;
+      }
+
+      /* 7. Reddit (Orange) */
+      .theme-reddit #capture-area {
+        background: #ffffff;
+      }
+      .theme-reddit .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-reddit .msg-row.other .bubble {
+        background: #dae0e6;
+        color: #000;
+        border-radius: 20px;
+      }
+      .theme-reddit .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-reddit .msg-row.me .bubble {
+        background: #ff4500;
+        color: #fff;
+        border-radius: 20px;
+      }
+
+      /* 8. Google (Pastel) */
+      .theme-google #capture-area {
+        background: #fffbf5;
+      }
+      .theme-google .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-google .msg-row.other .bubble {
+        background: #f2f2f2;
+        color: #1f1f1f;
+        border-radius: 24px;
+      }
+      .theme-google .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-google .msg-row.me .bubble {
+        background: #d3e3fd;
+        color: #041e49;
+        border-radius: 24px;
+      }
+
+      /* 9. Gemini (Gradient) */
+      .theme-gemini #capture-area {
+        background: #ffffff;
+      }
+      .theme-gemini .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-gemini .msg-row.other .bubble {
+        background: #f0f4f9;
+        color: #1e1f20;
+        border-top-left-radius: 4px;
+      }
+      .theme-gemini .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-gemini .msg-row.me .bubble {
+        background: linear-gradient(135deg, #4b90ff 0%, #ff5546 100%);
+        color: #fff;
+        border-top-right-radius: 4px;
+        font-weight: 500;
+      }
+
+      /* 10. ChatGPT (Teal) */
+      .theme-chatgpt #capture-area {
+        background: #ffffff;
+      }
+      .theme-chatgpt .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-chatgpt .msg-row.other .bubble {
+        background: #f7f7f8;
+        color: #374151;
+        border-radius: 8px;
+      }
+      .theme-chatgpt .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-chatgpt .msg-row.me .bubble {
+        background: #10a37f;
+        color: #fff;
+        border-radius: 8px;
+      }
+
+      /* 11. Claude (Beige) */
+      .theme-claude #capture-area {
+        background: #fdfaf5;
+      }
+      .theme-claude .msg-row.other {
+        align-items: flex-start;
+      }
+      .theme-claude .msg-row.other .bubble {
+        background: #f0eadd;
+        color: #3e3e3e;
+        border-radius: 12px;
+      }
+      .theme-claude .msg-row.me {
+        align-items: flex-end;
+      }
+      .theme-claude .msg-row.me .bubble {
+        background: #da7756;
+        color: #fff;
+        border-radius: 12px;
+      }
     </style>
   </head>
   <body class="theme-imessage">
@@ -401,17 +550,30 @@
           <button class="btn-bread" onclick="goHome()" title="홈으로 돌아가기">
             🍞️
           </button>
-          <h2>💬 로그 생성기 V7</h2>
+          <h2>💬 로그 생성기 V9</h2>
         </div>
         <button onclick="resetData()" class="btn-small">전체 초기화</button>
       </div>
 
-      <label>테마 선택</label>
+      <label>🎨 테마 선택</label>
       <select id="theme-select" onchange="changeTheme()">
-        <option value="theme-imessage">iMessage (Blue)</option>
-        <option value="theme-telegram">Telegram (Green)</option>
-        <option value="theme-line">LINE (Light Green)</option>
-        <option value="theme-discord">Discord (Blurple)</option>
+        <optgroup label="국민 메신저">
+          <option value="theme-kakao">카카오톡 (옐로우)</option>
+          <option value="theme-imessage">iMessage (블루)</option>
+          <option value="theme-line">LINE (연두)</option>
+          <option value="theme-telegram">Telegram (민트)</option>
+        </optgroup>
+        <optgroup label="SNS / 커뮤니티">
+          <option value="theme-x">X (트위터) (블랙)</option>
+          <option value="theme-daum">Daum Cafe (레드)</option>
+          <option value="theme-reddit">Reddit (오렌지)</option>
+          <option value="theme-google">Google (파스텔)</option>
+        </optgroup>
+        <optgroup label="AI 모델">
+          <option value="theme-gemini">Gemini (그라데이션)</option>
+          <option value="theme-chatgpt">ChatGPT (청록)</option>
+          <option value="theme-claude">Claude (베이지)</option>
+        </optgroup>
       </select>
 
       <label>치환 키워드</label>
@@ -487,7 +649,6 @@
         lastFocusedElem = document.getElementById("chat-input");
       };
 
-      // ✨ 홈페이지 이동 함수
       function goHome() {
         window.location.href = "https://toastout.github.io/toast/";
       }
@@ -526,11 +687,11 @@
           theme: document.getElementById("theme-select").value,
           keywords: getKeywordsFromUI(),
         };
-        localStorage.setItem("novel_gen_v7", JSON.stringify(data));
+        localStorage.setItem("novel_gen_v9", JSON.stringify(data));
       }
 
       function loadData() {
-        const saved = localStorage.getItem("novel_gen_v7");
+        const saved = localStorage.getItem("novel_gen_v9");
         if (saved) {
           const data = JSON.parse(saved);
           document.getElementById("chat-input").value =
@@ -551,7 +712,7 @@
 
       function resetData() {
         if (confirm("초기화 하시겠습니까?")) {
-          localStorage.removeItem("novel_gen_v7");
+          localStorage.removeItem("novel_gen_v9");
           location.reload();
         }
       }
@@ -678,7 +839,7 @@
           useCORS: true,
         }).then((canvas) => {
           const link = document.createElement("a");
-          link.download = "novel_log_v7.png";
+          link.download = "novel_log_v9.png";
           link.href = canvas.toDataURL("image/png");
           link.click();
         });
