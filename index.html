@@ -175,12 +175,12 @@
         z-index: 10;
         align-items: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.82);
+        background: rgba(255,255,255,0.82);
         backdrop-filter: blur(6px);
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0,0,0,0.08);
         border-radius: 20px;
         padding: 5px 11px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.10);
       }
       .longform-chips.visible {
         display: flex;
@@ -191,18 +191,11 @@
         border-radius: 50%;
         border: 2px solid transparent;
         cursor: pointer;
-        transition:
-          transform 0.15s,
-          border-color 0.15s;
+        transition: transform 0.15s, border-color 0.15s;
         flex-shrink: 0;
       }
-      .chip:hover {
-        transform: scale(1.25);
-      }
-      .chip.selected {
-        border-color: #334155;
-        transform: scale(1.15);
-      }
+      .chip:hover { transform: scale(1.25); }
+      .chip.selected { border-color: #334155; transform: scale(1.15); }
 
       .btn-icon {
         background: var(--input-bg);
@@ -503,7 +496,7 @@
         max-width: 660px;
         background: #f4efe6;
         padding: 56px 52px;
-        box-shadow: 0 6px 32px rgba(61, 43, 31, 0.13);
+        box-shadow: 0 6px 32px rgba(61,43,31,0.13);
         border-radius: 3px;
       }
       .preview-panel.longform-mode .chat-content {
@@ -532,26 +525,25 @@
       body .preview-panel.longform-mode .msg-row.other .bubble {
         border: none !important;
         background: transparent !important;
-        color: #3d2b1f !important;
-        padding: 10px 14px !important;
+        padding: 2px 0 !important;
         text-indent: 1em !important;
-        border-radius: 4px !important;
+        border-radius: 0 !important;
         box-shadow: none !important;
         font-weight: 400 !important;
         line-height: 1.9 !important;
-        margin-bottom: 0.5em !important;
+        margin-bottom: 0.8em !important;
       }
       body .preview-panel.longform-mode .msg-row.me .bubble {
         border: none !important;
-        background: rgba(61, 43, 31, 0.06) !important;
-        color: #3d2b1f !important;
-        padding: 10px 14px !important;
-        text-indent: 1em !important;
-        border-radius: 4px !important;
+        border-left: 2px solid rgba(61,43,31,0.32) !important;
+        background: transparent !important;
+        padding: 2px 0 2px 14px !important;
+        text-indent: 0 !important;
+        border-radius: 0 !important;
         box-shadow: none !important;
         font-weight: 400 !important;
         line-height: 1.9 !important;
-        margin-bottom: 0.5em !important;
+        margin-bottom: 0.8em !important;
       }
       /* 장문 모드 버튼 활성 상태 */
       .btn-longform.active {
@@ -1199,26 +1191,11 @@
           </a>
           <button onclick="resetData()" class="btn-small">전체 초기화</button>
           <div class="longform-group">
-            <button
-              class="btn-icon btn-longform"
-              id="longform-btn"
-              onclick="toggleLongform()"
-              title="장문 모드 — 소설/노트 뷰"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="16" y2="18" />
+            <button class="btn-icon btn-longform" id="longform-btn" onclick="toggleLongform()" title="장문 모드 — 소설/노트 뷰">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="16" y2="18"/>
               </svg>
             </button>
           </div>
@@ -1423,55 +1400,13 @@
 
     <div class="preview-panel">
       <div class="longform-chips" id="longform-chips">
-        <div
-          class="chip selected"
-          id="chip-sepia"
-          title="세피아"
-          style="background: #f4efe6; box-shadow: inset 0 0 0 1.5px #c8b89a"
-          onclick="setLongformTheme('sepia')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-ivory"
-          title="아이보리"
-          style="background: #faf8f3; box-shadow: inset 0 0 0 1.5px #d4d0c8"
-          onclick="setLongformTheme('ivory')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-green"
-          title="그린 페이퍼"
-          style="background: #f0f4ee; box-shadow: inset 0 0 0 1.5px #b8c9b4"
-          onclick="setLongformTheme('green')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-rose"
-          title="로즈"
-          style="background: #fdf4f5; box-shadow: inset 0 0 0 1.5px #e8b4bc"
-          onclick="setLongformTheme('rose')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-stone"
-          title="스톤"
-          style="background: #f2f1ef; box-shadow: inset 0 0 0 1.5px #c4c1bc"
-          onclick="setLongformTheme('stone')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-sky"
-          title="스카이"
-          style="background: #f0f6ff; box-shadow: inset 0 0 0 1.5px #a8c4e8"
-          onclick="setLongformTheme('sky')"
-        ></div>
-        <div
-          class="chip"
-          id="chip-lavender"
-          title="라벤더"
-          style="background: #f5f3ff; box-shadow: inset 0 0 0 1.5px #b8a8e8"
-          onclick="setLongformTheme('lavender')"
-        ></div>
+        <div class="chip selected" id="chip-sepia"    title="세피아"     style="background:#f4efe6; box-shadow:inset 0 0 0 1.5px #c8b89a;" onclick="setLongformTheme('sepia')"></div>
+        <div class="chip"          id="chip-ivory"    title="아이보리"    style="background:#faf8f3; box-shadow:inset 0 0 0 1.5px #d4d0c8;" onclick="setLongformTheme('ivory')"></div>
+        <div class="chip"          id="chip-green"    title="그린 페이퍼"  style="background:#f0f4ee; box-shadow:inset 0 0 0 1.5px #b8c9b4;" onclick="setLongformTheme('green')"></div>
+        <div class="chip"          id="chip-rose"     title="로즈"        style="background:#fdf4f5; box-shadow:inset 0 0 0 1.5px #e8b4bc;" onclick="setLongformTheme('rose')"></div>
+        <div class="chip"          id="chip-stone"    title="스톤"        style="background:#f2f1ef; box-shadow:inset 0 0 0 1.5px #c4c1bc;" onclick="setLongformTheme('stone')"></div>
+        <div class="chip"          id="chip-sky"      title="스카이"      style="background:#f0f6ff; box-shadow:inset 0 0 0 1.5px #a8c4e8;" onclick="setLongformTheme('sky')"></div>
+        <div class="chip"          id="chip-lavender" title="라벤더"      style="background:#f5f3ff; box-shadow:inset 0 0 0 1.5px #b8a8e8;" onclick="setLongformTheme('lavender')"></div>
       </div>
       <div id="capture-area">
         <div class="chat-content" id="chat-list"></div>
@@ -1513,74 +1448,22 @@
       let longformTheme = "sepia";
 
       const LONGFORM_THEMES = {
-        sepia: {
-          outer: "#e8e0d0",
-          page: "#f4efe6",
-          shadow: "rgba(61,43,31,0.13)",
-          text: "#3d2b1f",
-          meBg: "rgba(61,43,31,0.06)",
-          otherBg: "transparent",
-        },
-        ivory: {
-          outer: "#e8e7e2",
-          page: "#faf8f3",
-          shadow: "rgba(45,45,45,0.10)",
-          text: "#2d2d2d",
-          meBg: "rgba(45,45,45,0.05)",
-          otherBg: "transparent",
-        },
-        green: {
-          outer: "#dde6db",
-          page: "#f0f4ee",
-          shadow: "rgba(45,58,46,0.11)",
-          text: "#2d3a2e",
-          meBg: "rgba(45,58,46,0.06)",
-          otherBg: "transparent",
-        },
-        rose: {
-          outer: "#f0e4e6",
-          page: "#fdf4f5",
-          shadow: "rgba(74,32,40,0.10)",
-          text: "#4a2028",
-          meBg: "rgba(74,32,40,0.05)",
-          otherBg: "transparent",
-        },
-        stone: {
-          outer: "#e2e0dd",
-          page: "#f2f1ef",
-          shadow: "rgba(44,44,44,0.10)",
-          text: "#2c2c2c",
-          meBg: "rgba(44,44,44,0.05)",
-          otherBg: "transparent",
-        },
-        sky: {
-          outer: "#d8e8f8",
-          page: "#f0f6ff",
-          shadow: "rgba(30,58,95,0.10)",
-          text: "#1e3a5f",
-          meBg: "rgba(30,58,95,0.05)",
-          otherBg: "transparent",
-        },
-        lavender: {
-          outer: "#e4e0f8",
-          page: "#f5f3ff",
-          shadow: "rgba(45,27,105,0.10)",
-          text: "#2d1b69",
-          meBg: "rgba(45,27,105,0.05)",
-          otherBg: "transparent",
-        },
+        sepia:    { outer:"#e8e0d0", page:"#f4efe6", shadow:"rgba(61,43,31,0.13)",  text:"#3d2b1f", meBg:"transparent", otherBg:"transparent", meLine:"rgba(61,43,31,0.32)"  },
+        ivory:    { outer:"#e8e7e2", page:"#faf8f3", shadow:"rgba(45,45,45,0.10)",  text:"#2d2d2d", meBg:"transparent", otherBg:"transparent", meLine:"rgba(45,45,45,0.28)"  },
+        green:    { outer:"#dde6db", page:"#f0f4ee", shadow:"rgba(45,58,46,0.11)",  text:"#2d3a2e", meBg:"transparent", otherBg:"transparent", meLine:"rgba(45,58,46,0.32)"  },
+        rose:     { outer:"#f0e4e6", page:"#fdf4f5", shadow:"rgba(74,32,40,0.10)",  text:"#4a2028", meBg:"transparent", otherBg:"transparent", meLine:"rgba(74,32,40,0.28)"  },
+        stone:    { outer:"#e2e0dd", page:"#f2f1ef", shadow:"rgba(44,44,44,0.10)",  text:"#2c2c2c", meBg:"transparent", otherBg:"transparent", meLine:"rgba(44,44,44,0.28)"  },
+        sky:      { outer:"#d8e8f8", page:"#f0f6ff", shadow:"rgba(30,58,95,0.10)",  text:"#1e3a5f", meBg:"transparent", otherBg:"transparent", meLine:"rgba(30,58,95,0.28)"  },
+        lavender: { outer:"#e4e0f8", page:"#f5f3ff", shadow:"rgba(45,27,105,0.10)", text:"#2d1b69", meBg:"transparent", otherBg:"transparent", meLine:"rgba(45,27,105,0.28)" },
       };
+;
 
       function setLongformTheme(name) {
         longformTheme = name;
         // 칩 selected 표시
-        ["sepia", "ivory", "green", "rose", "stone", "sky", "lavender"].forEach(
-          (t) => {
-            document
-              .getElementById("chip-" + t)
-              ?.classList.toggle("selected", t === name);
-          },
-        );
+        ["sepia","ivory","green","rose","stone","sky","lavender"].forEach(t => {
+          document.getElementById("chip-"+t)?.classList.toggle("selected", t === name);
+        });
         if (longformMode) render();
         saveData();
       }
@@ -1598,11 +1481,8 @@
       function resetLongformThemeCSS() {
         const panel = document.querySelector(".preview-panel");
         const capture = document.getElementById("capture-area");
-        if (panel) panel.style.backgroundColor = "";
-        if (capture) {
-          capture.style.background = "";
-          capture.style.boxShadow = "";
-        }
+        if (panel)   panel.style.backgroundColor = "";
+        if (capture) { capture.style.background = ""; capture.style.boxShadow = ""; }
       }
 
       function toggleLongform() {
@@ -1760,14 +1640,8 @@
           if (data.italicEnabled !== undefined)
             document.getElementById("italic-toggle").checked =
               data.italicEnabled;
-          if (data.longformTheme) {
-            longformTheme = data.longformTheme;
-            setLongformTheme(data.longformTheme);
-          }
-          if (data.longformMode) {
-            longformMode = false;
-            toggleLongform();
-          }
+          if (data.longformTheme) { longformTheme = data.longformTheme; setLongformTheme(data.longformTheme); }
+          if (data.longformMode) { longformMode = false; toggleLongform(); }
         } else {
           document.getElementById("chat-input").value = EXAMPLE_TEXT;
           DEFAULT_KEYWORDS.forEach((k) => addKeywordRow(k.target, k.replace));
@@ -1963,27 +1837,25 @@
           const isMe = block.speaker === "me";
           row.className = isMe ? "msg-row me" : "msg-row other";
 
-          const isLongform = document
-            .querySelector(".preview-panel")
-            ?.classList.contains("longform-mode");
+          const isLongform = document.querySelector(".preview-panel")?.classList.contains("longform-mode");
           if (isLongform) {
             applyLongformThemeCSS();
             row.onclick = () => toggleSpeaker(index);
             const t = LONGFORM_THEMES[longformTheme] || LONGFORM_THEMES.sepia;
             const bubbleStyle = [
               "border:none",
-              "border-radius:4px",
               "box-shadow:none",
               "max-width:100%",
-              "padding:10px 14px",
-              "text-indent:1em",
-              "margin-bottom:0.5em",
+              "margin-bottom:0.8em",
               "line-height:1.9",
               "font-size:var(--bubble-font-size,15px)",
               "font-weight:400",
               "display:block",
+              "background:transparent",
               `color:${t.text}`,
-              `background:${isMe ? t.meBg : t.otherBg}`,
+              isMe
+                ? `border-left:2px solid ${t.meLine};padding:2px 0 2px 14px;text-indent:0`
+                : "padding:2px 0;text-indent:1em",
             ].join(";");
             row.innerHTML = `<div class="bubble" style="${bubbleStyle}">${displayText}</div>`;
           } else {
@@ -2044,7 +1916,7 @@
             }
           } else {
             const link = document.createElement("a");
-            link.download = "novel_v13.png";
+            link.download = "novel_v12.png";
             link.href = imgData;
             link.click();
           }
