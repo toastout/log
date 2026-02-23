@@ -1903,25 +1903,38 @@
             (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
           if (isIOS) {
-            const win = window.open("", "_blank");
-            if (win) {
-              win.document.write(
-                `<html><head><title>이미지 저장</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{margin:0;background:#f0f0f0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,sans-serif}img{max-width:90%;box-shadow:0 4px 15px rgba(0,0,0,.2);border-radius:8px;margin-bottom:20px}p{color:#555;margin-bottom:20px;font-weight:600}.close-btn{padding:10px 20px;background:#333;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}</style></head><body><p>이미지를 길게 눌러 "사진 앱에 저장" 하세요</p><img src="${imgData}" alt="Generated Log"><button class="close-btn" onclick="window.close()">닫기</button></body></html>`,
-              );
-              win.document.close();
-            } else {
-              alert(
-                "팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.",
-              );
-            }
+            // iOS: 인페이지 모달로 표시 (팝업 차단 우회)
+            const modal = document.getElementById("save-modal");
+            const modalImg = document.getElementById("save-modal-img");
+            modalImg.src = imgData;
+            modal.style.display = "flex";
           } else {
+            // 안드로이드/데스크톱: 직접 다운로드
             const link = document.createElement("a");
-            link.download = "novel_v12.png";
+            link.download = "novel_v13.png";
             link.href = imgData;
             link.click();
           }
         });
       }
+
+      function closeSaveModal(e) {
+        if (!e || e.target === document.getElementById("save-modal")) {
+          const modal = document.getElementById("save-modal");
+          modal.style.display = "none";
+          document.getElementById("save-modal-img").src = "";
+        }
+      }
     </script>
+
+  <!-- 이미지 저장 모달 -->
+  <div id="save-modal" onclick="closeSaveModal(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+    <div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;padding:20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+      <p style="margin:0 0 6px;font-size:0.85rem;color:#64748b;font-weight:600;">이미지를 길게 눌러 저장하세요</p>
+      <p style="margin:0 0 14px;font-size:0.78rem;color:#94a3b8;">iOS: 사진 앱에 저장 &nbsp;·&nbsp; 안드로이드: 이미지 저장</p>
+      <img id="save-modal-img" src="" alt="Generated Log" style="max-width:100%;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);display:block;margin:0 auto 16px;">
+      <button onclick="closeSaveModal()" style="width:100%;padding:10px;background:#334155;color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;">닫기</button>
+    </div>
+  </div>
   </body>
 </html>
