@@ -1928,11 +1928,12 @@
     </script>
 
   <!-- 이미지 저장 모달 -->
-  <div id="save-modal" onclick="closeSaveModal(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-    <div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;padding:20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+  <div id="save-modal" onclick="closeSaveModal(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px;box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;padding:20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;margin:auto;position:relative;">
+      <button onclick="closeSaveModal()" style="position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,0.1);color:#334155;font-size:1.1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
       <p style="margin:0 0 6px;font-size:0.85rem;color:#64748b;font-weight:600;">이미지를 길게 눌러 저장하세요</p>
       <p style="margin:0 0 14px;font-size:0.78rem;color:#94a3b8;">iOS: 사진 앱에 저장 &nbsp;·&nbsp; 안드로이드: 이미지 저장</p>
-      <img id="save-modal-img" src="" alt="Generated Log" style="max-width:100%;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);display:block;margin:0 auto 16px;">
+      <img id="save-modal-img" src="" alt="Generated Log" style="max-width:100%;max-height:70vh;object-fit:contain;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);display:block;margin:0 auto 16px;">
       <button onclick="closeSaveModal()" style="width:100%;padding:10px;background:#334155;color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;">닫기</button>
     </div>
   </div>
