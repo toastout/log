@@ -1188,6 +1188,20 @@
       }
 
       /* 22. 폴라로이드 */
+      /* 폴라로이드 + 장문 모드 충돌 방지 */
+      .theme-polaroid .preview-panel.longform-mode .msg-row.other,
+      .theme-polaroid .preview-panel.longform-mode .msg-row.me {
+        margin-bottom: 0 !important;
+      }
+      .theme-polaroid .preview-panel.longform-mode .msg-row .bubble {
+        transform: none !important;
+        padding: 2px 0 !important;
+      }
+      .theme-polaroid .preview-panel.longform-mode .msg-row .bubble::before,
+      .theme-polaroid .preview-panel.longform-mode .msg-row .bubble::after {
+        display: none !important;
+      }
+
       .theme-polaroid #capture-area {
         background: #d0cabf;
       }
@@ -1826,7 +1840,7 @@
         const capture = document.getElementById("capture-area");
         if (!panel || !capture) return;
         panel.style.backgroundColor = t.outer;
-        capture.style.background = t.page;
+        capture.style.setProperty("background", t.page, "important");
         capture.style.boxShadow = `0 6px 32px ${t.shadow}`;
       }
 
